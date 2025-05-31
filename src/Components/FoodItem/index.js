@@ -1,65 +1,68 @@
-import {useState} from 'react'
-
 import './index.css'
 
-const FoodItem = props => {
-  const {dishDetails} = props
+const FoodItem = ({
+  dishDetails,
+  cartItems,
+  addItemToCart,
+  removeItemFromCart,
+}) => {
   const {
-    dishCalories,
+    dishId,
+    dishName,
+    dishType,
+    dishPrice,
     dishCurrency,
     dishDescription,
     dishImage,
-    dishName,
-    dishPrice,
-    dishType,
+    dishCalories,
     addonCat,
     dishAvailability,
   } = dishDetails
 
-  const className = dishType === 1 ? 'veg-dish' : 'non-veg-dish'
-  const [count, setCount] = useState(0)
+  const onIncreaseQuantity = () => addItemToCart(dishDetails)
+  const onDecreaseQuantity = () => removeItemFromCart(dishDetails)
 
-  const onIncrease = () => {
-    setCount(pre => pre + 1)
+  const getQuantity = () => {
+    const cartItem = cartItems.find(item => item.dishId === dishId)
+    return cartItem ? cartItem.quantity : 0
   }
 
-  const onDecrease = () => {
-    if (count > 0) {
-      setCount(pre => pre - 1)
-    }
-  }
+  const renderControllerButton = () => (
+    <div className="controller-container d-flex align-items-center bg-success">
+      <button className="button" type="button" onClick={onDecreaseQuantity}>
+        -
+      </button>
+      <p className="quantity">{getQuantity()}</p>
+      <button className="button" type="button" onClick={onIncreaseQuantity}>
+        +
+      </button>
+    </div>
+  )
 
   return (
-    <li className="food-item-container">
-      <div className={`box ${className}`}>
-        <div className="circle">.</div>
+    <li className="mb-3 p-3 dish-item-container d-flex">
+      <div
+        className={`veg-border ${dishType === 1 ? 'non-veg-border' : ''} me-3`}
+      >
+        <div className={`veg-round ${dishType === 1 ? 'non-veg-round' : ''}`} />
       </div>
-      <div className="name-container">
-        <h1 className="food-name">{dishName}</h1>
-        <div className="price-container">
-          <p className="currency">{dishCurrency}</p>
-          <span className="price">{dishPrice}</span>
-        </div>
-        <p className="description">{dishDescription}</p>
-        {dishAvailability ? (
-          <div className="counter-container">
-            <button type="button" className="counter-btn" onClick={onDecrease}>
-              -
-            </button>
-            <span className="count">{count}</span>
-            <button type="button" className="counter-btn" onClick={onIncrease}>
-              +
-            </button>
-          </div>
-        ) : (
-          <p>Not available</p>
+      <div className="dish-details-container">
+        <h1 className="dish-name">{dishName}</h1>
+        <p className="dish-currency-price">
+          {dishCurrency} {dishPrice}
+        </p>
+        <p className="dish-description">{dishDescription}</p>
+        {dishAvailability && renderControllerButton()}
+        {!dishAvailability && (
+          <p className="not-availability-text text-danger">Not available</p>
         )}
-        {addonCat.length > 0 && (
-          <p className="custom-text">Customizations available</p>
+        {addonCat.length !== 0 && (
+          <p className="addon-availability-text">Customizations available</p>
         )}
       </div>
-      <p className="calories">{dishCalories} Calories</p>
-      <img className="food-image" src={dishImage} alt={dishName} />
+
+      <p className="dish-calories text-warning">{dishCalories} calories</p>
+      <img className="dish-image" alt={dishName} src={dishImage} />
     </li>
   )
 }

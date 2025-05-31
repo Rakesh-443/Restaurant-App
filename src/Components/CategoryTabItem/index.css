@@ -1,8 +1,0 @@
-.category-item {
-  list-style-type: none;
-  font-family: 'Roboto';
-  cursor: pointer;
-}
-.active {
-  border-bottom: 2px solid orange;
-}

@@ -1,15 +1,6 @@
-import Header from './Components/Header'
-import FoodMenu from './Components/FoodMenu'
-
+import Home from './Components/Home'
 import './App.css'
 
-const App = () => (
-  <div className="app-main-container">
-    <div className="app-flex-container">
-      <Header />
-      <FoodMenu />
-    </div>
-  </div>
-)
+const App = () => <Home />
 
 export default App
